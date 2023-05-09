@@ -1,0 +1,190 @@
+.navbar {
+    font-size: 20px;
+    background-color:rgb(141, 142, 141);
+    box-shadow: 1px 1px 2px black;
+}
+
+.logo {
+    border-radius: 0% 50% 0% 50%;
+    border: 2px solid rgb(54, 52, 52);
+    filter:saturate(50);
+    margin: 10px;
+}
+
+.avatar{
+    margin: 5px 10px; 
+    border: 2px solid rgb(55, 42, 42, 0.4);
+}
+
+#icon-button {
+    /*color:red;*/
+}
+
+.home-page {
+    margin-top: 5px;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.home-page h2 {
+    font-size: 30px;
+    font-style: italic;
+    text-shadow: 1px 1px 1px rgb(175, 170, 170);
+}
+
+.home-page h3{
+    color:rgb(54, 52, 52);
+    font-weight: 200;
+}
+
+.plus-button {
+    width: 200px;
+    font-weight: 200;
+    border-radius: 6px;
+    background-color: rgb(110, 110, 218);
+    box-shadow: 2px 2px 2px rgb(108, 108, 108, 0.6);
+    margin-bottom: 10px;
+}
+
+#signup-form, #login-form {
+    gap: 15px;
+    width: 200px;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.signup, .login {
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 30px;
+    width: 400px;
+    margin-top: 20px;
+    background-color:rgb(235, 226, 215);
+    box-shadow:1px 1px 2px rgb(118, 118, 118);
+}
+
+.signup h2, .login h2 {
+    text-shadow: 1px 1px 1px rgb(177, 177, 177);
+}
+
+.signup input, .login input {
+    box-shadow:1px 1px 1px rgb(118, 118, 118);
+    border: 1px;
+    border-radius: 3px;
+    padding-left: 10px; 
+}
+
+.form-container {
+    margin-top: 20px;
+    background-color:#aac9c5;
+    height: 110px;
+    width: 540px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 1px rgb(132, 132, 132);
+}
+
+.form-container form {
+    padding: 15px;
+}
+
+#todo-input{
+    margin-right: 10px;
+    height: 40px;
+    background-color:transparent;
+    border: 1px solid rgb(84, 83, 83, 0.4);
+    border-radius: 5px;
+    font-size: 12px;
+    color: #001188;
+    padding-left: 13px;
+    width: 210px;
+}
+
+#todo-input:hover{
+    border: 1px solid rgb(0, 0, 0);
+}
+
+#todo-input::placeholder  {
+    color: #001188;
+}
+.form-container button {
+    margin: 10px;
+    border: 1px solid rgb(84, 83, 83, 0.4);
+    font-size: 15px;
+    color: #001188;
+    padding: 2px 5px;
+    border-radius: 5px;
+    background-color:rgb(238, 238, 238);
+}
+
+.form-container button:hover {
+    background-color:rgb(203, 254, 203);
+    border: 1px solid rgba(2, 2, 2, 0.4);
+}
+
+.todo-items-container {
+    display:flex;
+    flex-direction:column;
+    gap: 10px;
+    font-size: 13px;
+    align-items:center;
+    height: 400px;
+    
+    flex-wrap: wrap;
+}
+
+.todo-item-outer {
+    width: 200px;
+    height: 60px;
+}
+.todo-item {
+    display:grid;
+    grid-template-columns: 1fr .3fr 1fr;
+    grid-template-rows: 1fr .6fr;
+    grid-template-areas: 
+    "item item item"
+    "date checkbox time";
+
+    width: 100%;
+    height: 100%;
+    background-color:aquamarine;
+    border-radius: 10px;
+    border: 1px solid rgb(151, 151, 151);
+    box-shadow:1px 1px 1px rgb(158, 158, 158);
+}
+
+.todo-item-outer button {
+    border: none;
+    background-color: transparent;
+    align-self:right;
+    position: relative;
+    top: 20px;
+    left: 85px;
+}
+
+.item {
+    width: 100%;
+    grid-area: item;
+    align-self: center;
+    text-align:center;
+}
+
+.date {
+    grid-area: date;
+    align-self: flex-end;
+    padding-left: 6px;
+}
+
+#checkbox {
+    grid-area: checkbox;
+}
+
+.time {
+    grid-area: time;
+    align-self: flex-end;
+    justify-self:flex-end;
+    padding-right: 6px;
+}

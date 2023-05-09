@@ -1,0 +1,82 @@
+3) Create views/SingleProduct.jsx
+    - rfc 
+    - import React, {useState, useEffect} from 'react'
+    - make Route in App.jsx (pass in user as props -- we will eventually want this to check for admin, to show Update/Delete buttons)
+        - import SingleProduct
+        - path='/products/:productId'
+                            ^ how we pass the productId in as a parameter through a Route
+    - NOT adding this to Navbar.jsx component because I would have to add every single item, since this route requires a param. 
+        The way we will access this is through the Products page having each SingleProduct be a Link to that SingleProduct's specific page
+    - import { useParams } from 'react-router-dom'
+      import Product from '../components/Product' (MAKE SURE THIS IS PRODUCT from COMPONENTS and not PRODUCTS from VIEWS)
+    - create variables like in SinglePost.jsx -> note the useParams() method takes in the specific parameter for the product ID 
+    - create async inner function getProductInfo:
+        - we cannot make this until create an API route in product_routes.py (Flask)
+        ------>
+            ( IN PRODUCT_ROUTES.PY )
+            - create method getProductAPI that is just like getPostAPI (just replace Post with Product) from the ig_routes.py file we had from in class 
+            - from there, let's test this out in Postman to make sure it is working
+            - in Postman:   create NEW -> HTTP request
+                            GET http://<localhost>/api/products/<someIDofaproduct-checkElephantSQLbecauseyoumightnothaveonewhereIDis1> 
+                            -- since this is a GET request, we do not have to add anything else
+            - this should return you the Product.to_dict() of the product whose ID you put in 
+        <------
+    (Back to SingleProduct.jsx in React)  
+    - in getProductInfo:  
+    - use the URL `http://<localhost>/api/products/${productId}`
+    - we can finish out the rest of this looking at SingleProduct.jsx
+    - we have not yet created clickable links to this but we can test out if this is working:
+        - go to the URL that you used in the GET method for postman 
+        - we should see our Product printed out for the product at the ID we specified!
+    - let's now make things clickable:
+    - (IN Products.jsx)
+    - wrap each element mapped in showProducts() with a Link tag
+        - don't forget to import { Link } from 'react-router-dom'
+        - to see how this is done, look at Feed.jsx from the in-class React finstagram
+    - we will need to edit the styling of the Link later since by default now everything is blue and underlined, but the routing should work
+    - now every product should be clickable!
+
+4) CART: Before even adding things to the cart, I want to check that I can view the items in the cart
+    - PRE-REQUISITE: to best test this out, I checked my ElephantSQL db to see which users had items in the cart. 
+        My account from the Flask project still has items in the cart so I am using that account
+    - Make a file in the views/ folder called Cart.jsx
+        - rfc
+    - Before we edit that, let's make a Route in App.jsx that passes in the user (so we know whose cart)
+    - (import Cart in App.jsx)
+    - make a link to the Cart.jsx view in the Navbar 
+    - note: any time we refresh a page we will have to log back into the account since we have not yet learned how to keep the user logged in.
+    - this routing should take us to the cart, so we can get started.
+    - to start, Cart is fundamentally going to be a lot like the Products page, just with only the products that the user has put in their cart
+    ------>
+        (IN FLASK)
+        - let's make another file in api/ folder called cart_routes.py  
+        - make sure we import this in the api/__init__.py file
+        -- NOTE: you could also just leave this in the product_routes.py folder but I want to separate them for my own organization
+        -   from . import api
+            from ..apiauthhelper import token_auth (so we make sure the correct user is looking at the correct cart)
+        - create a function just like getProductsAPI() but getCartAPI()
+            - use wrappers:
+            @api.get('/cart')
+            @token_auth.login_required # verify the token
+            - the way we get the list of products to include in the cart is through the foreign key to reference the cart
+            - I found how I was referencing the list of products in a cart in the Routes.py function for the cart page in our Flask e-commerce
+        - test this out with Postman
+            - GET http://127.0.0.1:5000/api/cart
+            - go to Authorization tab -> Bearer Token -> paste the token from the apitoken for that user (the one with items in their cart) in the ElephantSQL db
+            - this should return the proper API result!
+    <-------
+    (BACK TO Cart.jsx)
+    - a lot of this is based off Products.jsx for now since it is printing a list of products
+    - make sure you pass in {user} as props
+    - make a const variable for useState of products in the cart, since we will eventually want a button so that the user can delete something from their cart
+        - set the useState to the products currently in the cart (user.products is mine because that's how I get the cart products in my models.py)
+    -   import React, { useState, useEffect } from 'react'
+        import { Link } from 'react-router-dom'
+        import Product from '../components/Product'
+    - the only methods we currently need from Products.jsx are a useEffect method for mounting, a method to show the products in the cart and a method to get the products from the cart
+    - these are all straightforward based on the Products.jsx
+        - EXCEPT make sure that the products in the cart is gotten through a snake case variable
+        (in my Cart json, I used the variable "products_in_cart", so to get the items in that variable, I need to call data.products_in_cart, even though we are in JSX)
+    - *error message about mapping when value is undefined* -> this is because with all the refreshing, the user is no longer logged in!
+    - go back to the homepage and log in, then use the navbar to get to the cart.
+    - this should show your items!

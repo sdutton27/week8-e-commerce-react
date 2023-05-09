@@ -1,0 +1,184 @@
+Steps:
+
+1) Convert App.jsx to function (optional, but easy, following the code from in class)
+
+2) Create Products.jsx
+    - this is based on the News.jsx or NewsFunction.jsx page 
+        - I want to practice the RFC so I am basing it off NewsFunction
+        *** first I am doing this just printing a <DIV>, then I will create a Product.jsx component
+    - make sure you have routed this through App.jsx and through Navbar so you can access it 
+    - the order that I did this is much like the order we created the initial News.jsx in class day 1 
+        (not putting in inputText to start because I don't yet care about searching the products)
+    - hint: pretty much everything here that says 'news' is what we want for 'products'
+    - also to make your life easier to start, don't do the nameless function for handleChange, 
+        just setYourSearchBarText(e.target.value). use the nameless function stuff if you want multiple parameters, 
+        such as searching by category. in the <input> it can just be onChange={handleChange}
+    - for getNews/getProducts, we will need an API to search through to get a product...
+        ------->
+            - in Flask App, go to your api/ folder 
+            - we will be making something similar to the ig_routes.py 
+                (why?)-> this is how we got the information off the Post table for the finstagram.
+                        - similar to that, we are trying to get information from a table (Product), and
+                        - we need to convert that table to be JSON
+            - first go to your api/__init__.py and make sure you also import this new <name>_routes.py in the import with auth_routes
+            - next, make your <name>_routes.py file
+                - base that off the ig_routes.py
+                - make sure your Products table (Flask app, models.py, under Product) has a to_dict() method
+                - for now, I am just starting with the first method, which will just be for the full products page 
+        <-------
+    - back to Products.jsx (in React app)
+    - finish typing the getNews (or whatever you are calling it) method
+        - fetch(url) where the url is the localhost/api/<whatever-you-named-your-path>
+                                                            ^ mine was /products
+        - I took this from the Login.jsx because we are searching the Flask API in that, just using the /login route from authroutes.py
+        - We do not need to add any 'options' (or anything to apiauthhelper.py) because there is no authentication required. we will eventually for the cart to make sure the user is the correct user but that's later
+        - NOTE: right now my input bar for searching for a specific product name does not work because /products does not change depending on the product name. so there is no way to change the API from here based on the product name. we will make a route for this later in Flask
+    - don't forget to call your showProducts (or whatever you named it) in a div
+
+    - at this point, I got an error which says "Objects are not valid as a React child (found: object with keys {amazon_link, date_created, department, description, id, image, price, rating, title}). If you meant to render a collection of children, use an array instead."
+    - this is expected! because (see above, ***) I just put a random div instead of mapping things out in a way that actually works.
+        ---> let's made a Product.jsx in the components/ folder
+            - this is going to be a lot like the Article.jsx file because it is a single row of the Product table (like Article was a single row of the Post table)
+            - also note that Article.jsx was an RCC, let's make this an RFC instead for good practice
+            - note: that if you are mapping correctly, like in NewsFunction.jsx, you should be passing in something called ie. productInfo as a prop to the Product rfc.
+                - make sure you put props or {productInfo} as a parameter for the function to pass it along!
+            - your Product.to_dict() method should give you the variable names we will need to use here to get things to show up 
+                - for example, productInfo.title, if you have a column named title in your Product table.
+        <----
+        - import Product in your Products.jsx
+    - this should get a barebones, working products page! 
+
+3) Create views/SingleProduct.jsx
+    - rfc 
+    - import React, {useState, useEffect} from 'react'
+    - make Route in App.jsx (pass in user as props -- we will eventually want this to check for admin, to show Update/Delete buttons)
+        - import SingleProduct
+        - path='/products/:productId'
+                            ^ how we pass the productId in as a parameter through a Route
+    - NOT adding this to Navbar.jsx component because I would have to add every single item, since this route requires a param. 
+        The way we will access this is through the Products page having each SingleProduct be a Link to that SingleProduct's specific page
+    - import { useParams } from 'react-router-dom'
+      import Product from '../components/Product' (MAKE SURE THIS IS PRODUCT from COMPONENTS and not PRODUCTS from VIEWS)
+    - create variables like in SinglePost.jsx -> note the useParams() method takes in the specific parameter for the product ID 
+    - create async inner function getProductInfo:
+        - we cannot make this until create an API route in product_routes.py (Flask)
+        ------>
+            ( IN PRODUCT_ROUTES.PY )
+            - create method getProductAPI that is just like getPostAPI (just replace Post with Product) from the ig_routes.py file we had from in class 
+            - from there, let's test this out in Postman to make sure it is working
+            - in Postman:   create NEW -> HTTP request
+                            GET http://<localhost>/api/products/<someIDofaproduct-checkElephantSQLbecauseyoumightnothaveonewhereIDis1> 
+                            -- since this is a GET request, we do not have to add anything else
+            - this should return you the Product.to_dict() of the product whose ID you put in 
+        <------
+    (Back to SingleProduct.jsx in React)  
+    - in getProductInfo:  
+    - use the URL `http://<localhost>/api/products/${productId}`
+    - we can finish out the rest of this looking at SingleProduct.jsx
+    - we have not yet created clickable links to this but we can test out if this is working:
+        - go to the URL that you used in the GET method for postman 
+        - we should see our Product printed out for the product at the ID we specified!
+    - let's now make things clickable:
+    - (IN Products.jsx)
+    - wrap each element mapped in showProducts() with a Link tag
+        - don't forget to import { Link } from 'react-router-dom'
+        - to see how this is done, look at Feed.jsx from the in-class React finstagram
+    - we will need to edit the styling of the Link later since by default now everything is blue and underlined, but the routing should work
+    - now every product should be clickable!
+
+4) CART: Before even adding things to the cart, I want to check that I can view the items in the cart
+    - PRE-REQUISITE: to best test this out, I checked my ElephantSQL db to see which users had items in the cart. 
+        My account from the Flask project still has items in the cart so I am using that account
+    - Make a file in the views/ folder called Cart.jsx
+        - rfc
+    - Before we edit that, let's make a Route in App.jsx that passes in the user (so we know whose cart)
+    - (import Cart in App.jsx)
+    - make a link to the Cart.jsx view in the Navbar 
+    - note: any time we refresh a page we will have to log back into the account since we have not yet learned how to keep the user logged in.
+    - this routing should take us to the cart, so we can get started.
+    - to start, Cart is fundamentally going to be a lot like the Products page, just with only the products that the user has put in their cart
+    ------>
+        (IN FLASK)
+        - let's make another file in api/ folder called cart_routes.py  
+        - make sure we import this in the api/__init__.py file
+        -- NOTE: you could also just leave this in the product_routes.py folder but I want to separate them for my own organization
+        -   from . import api
+            from ..apiauthhelper import token_auth (so we make sure the correct user is looking at the correct cart)
+        - create a function just like getProductsAPI() but getCartAPI()
+            - use wrappers:
+            @api.get('/cart')
+            @token_auth.login_required # verify the token
+            - the way we get the list of products to include in the cart is through the foreign key to reference the cart
+            - I found how I was referencing the list of products in a cart in the Routes.py function for the cart page in our Flask e-commerce
+        - test this out with Postman
+            - GET http://127.0.0.1:5000/api/cart
+            - go to Authorization tab -> Bearer Token -> paste the token from the apitoken for that user (the one with items in their cart) in the ElephantSQL db
+            - this should return the proper API result!
+    <-------
+    (BACK TO Cart.jsx)
+    - a lot of this is based off Products.jsx for now since it is printing a list of products
+    - make sure you pass in {user} as props
+    - make a const variable for useState of products in the cart, since we will eventually want a button so that the user can delete something from their cart
+        - set the useState to the products currently in the cart (user.products is mine because that's how I get the cart products in my models.py)
+    -   import React, { useState, useEffect } from 'react'
+        import { Link } from 'react-router-dom'
+        import Product from '../components/Product'
+    - the only methods we currently need from Products.jsx are a useEffect method for mounting, a method to show the products in the cart and a method to get the products from the cart
+    - these are all straightforward based on the Products.jsx
+        - EXCEPT make sure that the products in the cart is gotten through a snake case variable
+        (in my Cart json, I used the variable "products_in_cart", so to get the items in that variable, I need to call data.products_in_cart, even though we are in JSX)
+    - *error message about mapping when value is undefined* -> this is because with all the refreshing, the user is no longer logged in!
+    - go back to the homepage and log in, then use the navbar to get to the cart.
+    - this should show your items!
+5) ADD ITEM TO CART:
+    - this will be a button on SingleProduct.jsx that adds the item to the cart
+        - let's start with the visuals:
+            - create a variable that holds the text for the button, initialize it with useState('add to cart')
+            - create the button that says that text, and a method such that that onClick=<method>. 
+                - in that method, if the buttonText === 'add to cart' set it to 'remove' and vice versa 
+                - NOTE: we will have to go back and actually make sure this variable is instantiated based on if the item is in the cart or not
+                - we will have to also go back and make sure that the method actually adds / removes item from the cart !
+            ------>
+                (In Flask, we will have a method in cart_routes.py - or product_routes.py, doesn't matter)
+                - name this method something about adding an item to the cart
+                -   @api.post('/some-route-about-adding-to-cart/<int:product_id>') NOTE THIS IS .post because it will be POST
+                    @token_auth.login_required (since we don't want user adding to the wrong cart)
+                - from flask import request
+                - from ..models import Product
+                - a lot of this will be based off the createPostAPI()/updatePostAPI() method from shoha's inclass ig_routes.py
+                    ^ why? because we are adding a product to the cart, so we are taking a product that already exists (like in updatePost), and adding it to something (like in createPost)
+                - we will
+                - get the right product (Product.query.get(product_id))
+                - if/else statement: if the product does not exist then return a 'not ok' w/message dict response 
+                - nested if/else: if the product DOES exist and is already in the cart (if product in token_auth.current_user().products)
+                    - return a dict with 'not ok' and message that item is already in the cart
+                    - NOTE: this is just how I am handling this. I will eventually go back and let the user be able to add multiple of one item to their cart
+                - if the product exists and has not yet been added to the cart,
+                    - use the method from routes.py (or models.py, your Product table) to add the product to the current user's cart (token_auth.current_user().add_to_cart(product)) is what my line looks like
+                    - return a 'status':'ok' dict with a message and any other info you want
+                - let's test this out on Postman!
+                POST http://<localhost>/api/add-to-cart-whatever-you-called-this/<product_id>
+                - make sure you have input the token for whatever user you want to check into the Bearer Token under the Authorization tab
+                - this should work!
+            <-------
+        (Back to REACT, SingleProduct.jsx)
+        BIG ISSUE: Making sure that the models.py has apitoken and products in the to_dict() method for user.
+        ANOTHER ISSUE: Make sure that getProductsInCart from Cart.jsx has options that include Authorization: {'Bearer '+ user.apitoken}
+        - added code to SingleProduct.jsx, too tired to type this up
+6) REMOVE ITEM FROM CART:   
+    too tired to type this up, very similar to above
+    - there is an issue here: we are going off of user.products to check if an item is in the cart...the problem is that this is just going off whatever products are in the cart upon login.
+        - we cannot update the user json internally in react and therefore have to get it from the flask through an API call
+    - remove products from the user.to_dict() since this is mutable
+    - we will create a method in the cart_routes.py that will let us check if the cart has the item in it.
+    - this way we are doing this from the backend
+    - this is a GET method, and requires token auth 
+    - test the method using postman to see if it works
+
+ADDING USER TO Product.jsx and the JSX in Cart.jsx
+- this didn't work because we don't have access to our products individually?
+
+7) remove items from cart buttons
+- take the method from singleproduct for removing an item from the cart and paste into Cart.jsx
+    - only thing different is instead of setState, we just call the page to update the products on the page
+- add a button in the map for showing the products that has an onClick that calls that remove method

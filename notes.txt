@@ -1,0 +1,90 @@
+- A user should be able to sign up - DONE
+- A route that shows a list of all available products 
+    - "Feed" - ADDED BACKEND JUST NEED STYLING
+- When you click on a product it should be able to link to a route 
+    which shows a single product (with the information of the product 
+    you just clicked) 
+    - "Single Post" - JUST NEEDS STYLING (and buttons if admin)
+- User should be able to add a product to their cart, 
+    but only if they are logged in 
+    - "button on single post, if user is logged in, that adds item to cart"
+- A route (cart) that shows a list of products you’ve added into your cart 
+    as well as the total of all the items in your cart
+    - kinda like "Feed" in a way because it shows products but only certain products
+- Add a route that, when clicked handles functionality that removes all 
+items from your cart one time. Also create a button that, 
+when pressed, it removes that specific product object from the cart. 
+    - "Remove" - based on post-id (like in todo), and setCartState = []
+
+getPostAPI and getPostsAPI do not need the basic/token authorization, but for the make/update/remove post, we will need this
+^ this is not a restricted route 
+
+IF WE HAVE TIME:
+- Create admin functionality (add product, etc.)
+    
+TODO:
+    - reorganize navbar items (make sure diff depending on who is logged in), set all of shop stuff in a list 
+    - create alerts if authentication does not work 
+    - searching by name and by category - /products<q=name> maybe
+    - make sure there is an ON DELETE CASCADE for the products and the carts, so that if an item is removed then that item is removed from the users' carts who had that item in their cart!
+    - add total to Cart page
+    - right now cart_routes.py only lets you add an item once to the cart.
+    - put in HTTP numbers for cart_routes.py, like 404 and 201
+    - make sure button "empty cart" only appears when there is something in user.Products
+    - get drop-down menu based on the categories from ALL the products and make it searchable
+
+
+NEEDED TO FINISH: 
+    - put in HTTP numbers for cart_routes.py, like 404 and 201
+    - formatting for the price and links on the products page
+    - formatting for the Cart page
+
+
+
+Steps:
+
+1) Convert App.jsx to function (optional, but easy, following the code from in class)
+2) Create Products.jsx
+    - this is based on the News.jsx or NewsFunction.jsx page 
+        - I want to practice the RFC so I am basing it off NewsFunction
+        *** first I am doing this just printing a <DIV>, then I will create a Product.jsx component
+    - make sure you have routed this through App.jsx and through Navbar so you can access it 
+    - the order that I did this is much like the order we created the initial News.jsx in class day 1 
+        (not putting in inputText to start because I don't yet care about searching the products)
+    - hint: pretty much everything here that says 'news' is what we want for 'products'
+    - also to make your life easier to start, don't do the nameless function for handleChange, 
+        just setYourSearchBarText(e.target.value). use the nameless function stuff if you want multiple parameters, 
+        such as searching by category. in the <input> it can just be onChange={handleChange}
+    - for getNews/getProducts, we will need an API to search through to get a product...
+        ------->
+            - in Flask App, go to your api/ folder 
+            - we will be making something similar to the ig_routes.py 
+                (why?)-> this is how we got the information off the Post table for the finstagram.
+                        - similar to that, we are trying to get information from a table (Product), and
+                        - we need to convert that table to be JSON
+            - first go to your api/__init__.py and make sure you also import this new <name>_routes.py in the import with auth_routes
+            - next, make your <name>_routes.py file
+                - base that off the ig_routes.py
+                - make sure your Products table (Flask app, models.py, under Product) has a to_dict() method
+                - for now, I am just starting with the first method, which will just be for the full products page 
+        <-------
+    - back to Products.jsx (in React app)
+    - finish typing the getNews (or whatever you are calling it) method
+        - fetch(url) where the url is the localhost/api/<whatever-you-named-your-path>
+                                                            ^ mine was /products
+        - NOTE: right now my input bar for searching for a specific product name does not work because /products does not change depending on the product name. so there is no way to change the API from here based on the product name. we will make a route for this later in Flask
+    - don't forget to call your showProducts (or whatever you named it) in a div
+
+    - at this point, I got an error which says "Objects are not valid as a React child (found: object with keys {amazon_link, date_created, department, description, id, image, price, rating, title}). If you meant to render a collection of children, use an array instead."
+    - this is expected! because (see above, ***) I just put a random div instead of mapping things out in a way that actually works.
+        ---> let's made a Product.jsx in the components/ folder
+            - this is going to be a lot like the Article.jsx file because it is a single row of the Product table (like Article was a single row of the Post table)
+            - also note that Article.jsx was an RCC, let's make this an RFC instead for good practice
+            - note: that if you are mapping correctly, like in NewsFunction.jsx, you should be passing in something called ie. productInfo as a prop to the Product rfc.
+                - make sure you put props or {productInfo} as a parameter for the function to pass it along!
+            - your Product.to_dict() method should give you the variable names we will need to use here to get things to show up 
+                - for example, productInfo.title, if you have a column named title in your Product table.
+        <----
+        import Product in your Products.jsx
+
+

@@ -1,0 +1,199 @@
+/* The CSS for the e-commerce views/components */
+
+/* Products page */
+.outer-div-products {
+    font-family: 'Raleway', sans-serif;
+    background-color:rgb(247, 228, 172);
+    min-height:calc(100vh - 66px); /*66px is height of navbar*/
+}
+
+.products-page-body, .single-product-page-body, .cart-page-body {
+    width: 90%;
+    background-color:rgb(14, 82, 69);
+    min-height:calc(100vh - 66px); /*66px is height of navbar*/
+    box-shadow: 0px 0px 3px rgb(0, 21, 4);
+}
+
+#product-title, #cart-title {
+    font-size: 40px;
+    font-weight: 600;
+    text-shadow: 1px 1px 5px rgb(1, 28, 16);
+    color:rgb(253, 253, 253);
+    padding: 20px 0 20px;
+}
+
+.crossed-out-label {
+    width: 100%; 
+    text-align: center; 
+    color: rgb(247, 228, 172);
+    font-size: 13px;
+    border-bottom: 1px solid rgb(247, 228, 172); 
+    line-height: 0.1em;
+    margin: 10px 0 10px; 
+}
+
+.crossed-out-label span {
+    background:rgb(14, 82, 69); 
+    padding:0 2px; 
+}
+
+.product-search-form {
+    display: flex;
+    flex-direction: row;
+    align-items:center;
+    justify-content:center;
+    padding: 10px;
+    gap: 10px;
+}
+
+.products-table {
+    padding: 20px 0 20px;
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap:wrap;
+    justify-content: center;
+    gap: 30px;
+}
+
+.product-link {
+    text-decoration: none;
+}
+
+/* Product component */
+/* card, on the products page */
+.products-page-body .css-1oitmrd-MuiButtonBase-root-MuiCardActionArea-root {
+    width: 200px;
+}
+
+/* background for card, on the products page */
+.products-page-body .css-bhp9pd-MuiPaper-root-MuiCard-root {
+    width: 200px;
+}
+
+/* image, on the products page*/
+.products-page-body .css-o69gx8-MuiCardMedia-root {
+    object-fit:contain !important;
+    max-height: 100px;
+}
+
+/* title for product*/
+.products-page-body .css-h93ljk-MuiTypography-root {
+    display: block;
+    font-family: 'Raleway', sans-serif !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    max-height: 4em;
+    line-height: 2em;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space:nowrap;
+}
+
+/* Single products page */
+.single-product-page-body {
+    padding-top: 20px;
+    padding-bottom:20px;
+} 
+
+/* card */
+.single-product-page-body .css-bhp9pd-MuiPaper-root-MuiCard-root {
+    width: 90%;    
+}
+
+.single-product-page-body .css-o69gx8-MuiCardMedia-root {
+    object-fit:contain !important;
+    max-height: 300px;
+}
+
+.single-product-page-body .css-h93ljk-MuiTypography-root {
+    font-family: 'Raleway', sans-serif !important;
+    font-size: 20px !important;
+    font-weight: 600 !important;
+}
+
+/* Remove price from the single-product page */
+.single-product-page-body .css-r40f8v-MuiTypography-root {
+    font-size:0;
+}
+
+.single-product-info {
+    width: 90%;
+    margin-top: 10px;
+    padding: 10px 12px 10px 0px;
+    background-color: rgb(188, 246, 224);
+    border-radius: 5px;
+}
+
+.single-prod-price-container {
+    margin-top: 10px;
+    width: 90%;
+    padding: 10px 10px 10px 10px;
+    border-radius: 5px;
+    background-color: white;
+    display:flex;
+    flex-direction: column;
+    padding-bottom:10px;
+    gap: 10px;
+}
+
+.single-prod-price-container p {
+    margin-bottom: 0;
+}
+
+.single-prod-link {
+    text-decoration: none;
+    margin-top: 5px;
+}
+
+/*Cart page*/
+.cart-items {
+    display:flex;
+    flex-direction:column;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.cart-item-container {
+    margin-left: 10px;
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    gap: 10px;
+    justify-content:center;
+}
+
+/* image */
+.cart-item-container .css-o69gx8-MuiCardMedia-root {
+    width: 100px;
+    padding: 5px;
+}
+
+.cart-item-container a {
+    width: 70%;
+    text-decoration:none;
+}
+
+/* card */
+.cart-item-container .css-1oitmrd-MuiButtonBase-root-MuiCardActionArea-root {
+    display:flex;
+    flex-direction:row;
+    width: 80%;
+}
+
+/* product title */
+.cart-item-container .css-h93ljk-MuiTypography-root {
+    font-family: 'Raleway', sans-serif !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+}
+
+/* cost */
+.cart-page-body h4 {
+    margin-top: 20px;
+    margin-bottom:0px;
+    padding-bottom: 30px;
+    color:white;
+    text-shadow: 1px 1px 5px rgb(1, 28, 16);
+}
